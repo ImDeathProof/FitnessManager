@@ -1,0 +1,65 @@
+#EN
+
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+Copyright (c) 2025 Elias Garcia
+
+This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+
+You are free to:
+
+- Share — copy and redistribute the material in any medium or format
+- Adapt — remix, transform, and build upon the material
+
+Under the following terms:
+
+- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. 
+  You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+
+- NonCommercial — You may not use the material for commercial purposes.
+
+- No additional restrictions — You may not apply legal terms or technological measures 
+  that legally restrict others from doing anything the license permits.
+
+Notices:
+
+- You do not have to comply with the license for elements of the material in the public domain 
+  or where your use is permitted by an applicable exception or limitation.
+- No warranties are given. The license may not give you all of the permissions necessary for your intended use.
+  For example, other rights such as publicity, privacy, or moral rights may limit how you use the material.
+
+Full license text available at:
+https://creativecommons.org/licenses/by-nc/4.0/
+
+#ES 
+
+Licencia Creative Commons Atribución-NoComercial 4.0 Internacional (CC BY-NC 4.0)
+
+Copyright (c) 2025 Elias Garcia
+
+Este proyecto está licenciado bajo la Licencia Creative Commons Atribución-NoComercial 4.0 Internacional.
+
+Eres libre de:
+
+- Compartir — copiar y redistribuir el material en cualquier medio o formato.
+- Adaptar — remezclar, transformar y crear a partir del material.
+
+Bajo las siguientes condiciones:
+
+- Atribución — Debes otorgar el crédito correspondiente, proporcionar un enlace a la licencia e indicar si se han realizado cambios.  
+  Puedes hacerlo de cualquier manera razonable, pero no de forma que sugiera que tienes el apoyo del autor o que este aprueba tu uso.
+
+- NoComercial — No puedes utilizar este material con fines comerciales.
+
+- Sin restricciones adicionales — No puedes aplicar términos legales o medidas tecnológicas que impidan a otros hacer 
+  lo que esta licencia permite.
+
+Avisos:
+
+- No tienes que cumplir con la licencia para los elementos del material que estén en el dominio público 
+  o cuando tu uso esté permitido por una excepción o limitación aplicable.
+- No se ofrecen garantías. Es posible que esta licencia no te otorgue todos los permisos necesarios para tu uso previsto.
+  Por ejemplo, otros derechos como los de privacidad, imagen o morales pueden limitar cómo utilizas el material.
+
+Texto completo disponible en:
+https://creativecommons.org/licenses/by-nc/4.0/deed.es
