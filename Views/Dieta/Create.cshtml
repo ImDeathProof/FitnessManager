@@ -1,0 +1,32 @@
+@model FitnessManager.Models.Dieta;
+
+<div class="container py-5">
+    <div class="row justify-content-md-center text-white">
+        <form asp-action="Create" class="col-md-6">
+            <h2 class="text-info">@ViewData["Title"]</h2>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            <div class="mb-3">
+                <label for="Nombre" class="form-label">Nombre:</label>
+                <input type="text" class="form-control" id="Nombre" name="Nombre" required>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="Descripcion" class="form-label">Descripción:</label>
+                <textarea type="text" class="form-control" id="Descripcion" name="Descripcion" style="resize: none;"rows="6" required></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="CaloriasDiarias " class="form-label">Calorias diarias:</label>
+                <input type="text" class="form-control" id="CaloriasDiarias" name="CaloriasDiarias" required>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <input type="submit" value="Crear dieta" class="btn btn-gradient"/>
+            <a type="submit" value="Crear dieta" class="btn btn-link">Volver</a>
+        </form>
+    </div>
+</div>

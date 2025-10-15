@@ -1,0 +1,29 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="container">
+            <h2 class="text-info">@ViewData["Title"]</h2>
+            <p class="text-white">Aquí puedes gestionar tus dietas, crear nuevas y llevar un registro diario de tus comidas para alcanzar tus objetivos.</p>
+        </div>
+
+    </div>
+    <div class="row g-4 mt-3">
+        <div class="col-6 col-md-4">
+            <a asp-action="Read" class="btn btn-gradient d-flex flex-column align-items-center justify-content-center shadow-lg hover-scale square-btn">
+                <i class="bi bi-basket mb-2" style="font-size: 2rem;"></i>
+                <span class="fw-bold">Mis dietas</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-4">
+            <a asp-action="Create" class="btn btn-gradient d-flex flex-column align-items-center justify-content-center shadow-lg hover-scale square-btn">
+                <i class="fa-solid fa-plus mb-2" style="font-size: 2rem;"></i>
+                <span class="fw-bold">Nueva dieta</span>
+            </a>
+        </div>
+        <div class="col-6 col-md-4">
+            <a asp-controller="RegistroDiario" asp-action="Index" class="btn btn-gradient d-flex flex-column align-items-center justify-content-center shadow-lg hover-scale square-btn">
+                <i class="fa-solid fa-pen-to-square mb-2" style="font-size: 2rem;"></i>
+                <span class="fw-bold">Registro diario</span>
+            </a>
+        </div>
+    </div>
+</div>
