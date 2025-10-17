@@ -34,7 +34,7 @@ namespace FitnessManager.Repositories
 
         public async Task<Dieta> GetDietaByIdAsync(int id)
         {
-            return await _context.Dietas.FindAsync(id);
+            return await _context.Dietas.FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task UpdateDietaAsync(Dieta dieta)

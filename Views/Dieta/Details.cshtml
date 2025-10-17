@@ -1,0 +1,33 @@
+@model FitnessManager.Models.Dieta
+
+<div class="row container py-5 text-white justify-content-center">
+    <div class="col-md-8">
+        <div class="container">
+            <div class="card">
+                <div class="card-header gradientT1">
+                    <h2 class="text-light">Dieta: @Model.Nombre</h2>
+                </div>
+                <div class="card-body bg-dark">
+                    @{
+                        if (TempData["ErrorMessage"] != null) {
+                            <div class="alert alert-danger" role="alert">
+                                <p>@TempData["ErrorMessage"]</p>
+                            </div>
+                        }else if (TempData["SuccessMessage"] != null) {
+                            <div class="alert alert-success" role="alert">
+                                <p>@TempData["SuccessMessage"]</p>
+                            </div>
+                        }
+                    }
+                    <p class="text-white">Calorias diarias: @Model.CaloriasDiarias Kcal</p>
+                    <p class="text-white">Descripción: @Model.Descripcion</p>
+                </div>
+                <div class="card-footer bg-dark">
+                    <a class="btn btn-edit-gradient" asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-edit me-1"></i>Editar</a>
+                    <a class="btn btn-delete-gradient" asp-action="Delete" asp-route-id="@Model.Id"><i class="fa-solid fa-trash me-1"></i>Eliminar</a>
+                    <a class="btn btn-detail-gradient" asp-action="Read"><i class="fa-solid fa-arrow-left me-1"></i>Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

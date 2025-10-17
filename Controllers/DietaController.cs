@@ -65,7 +65,6 @@ namespace FitnessManager.Controllers
                 return View(dieta);
             }
         }
-
         public async Task<IActionResult> Read()
         {
             ViewData["Title"] = "Mis dietas";
@@ -73,6 +72,25 @@ namespace FitnessManager.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             dietas = dietas.Where(d => d.UsuarioId == userId).ToList();
             return View(dietas);
+        }
+
+        //GET : Dieta/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            Console.WriteLine("Details method called with id: " + id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var dieta = await _dietaService.GetDietaByIdAsync(id.Value);
+            if (dieta == null)
+            {
+                return NotFound();
+            }
+            ViewData["Title"] = dieta.Nombre;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Console.WriteLine(dieta.UsuarioId + " " + userId + " " + id.Value + " " + dieta.Nombre);
+            return View(dieta);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
