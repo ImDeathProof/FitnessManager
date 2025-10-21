@@ -1,0 +1,36 @@
+@model IEnumerable<FitnessManager.Models.Exercise>
+
+<div class="row container py-5 text-white justify-content-center">
+    <div class="col-md-8 gradientT1 rounded">
+        <h2>Lista de Ejercicios</h2>
+        <form asp-action="Index" method="get">
+            <div class="form-group">
+                <h4>Buscar:</h4>
+                <div class="input-group mb-3">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar" aria-label="Recipient" value="@ViewData["CurrentSearch"]">
+                    <button type="submit" class="btn btn-outline-light"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </form>
+        <div class="d-flex justify-content-center flex-wrap gap-3 container overflow-auto" style="max-height: 80vh;">
+            @foreach (var Exercise in Model)
+            {
+                <div class="card  bg-dark-subtle" style="width: 35rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body overflow-hidden text-truncate" style="max-height: 5rem;">
+                        <h5 class="card-title">@Exercise.Name</h5>
+                        <p class="card-text" style="max-width: 25rem;">Instrucciones: @Exercise.Instructions</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Categoria: @Exercise.Category</li>
+                        <li class="list-group-item">Musculo: @Exercise.PrimaryMuscles</li>
+                        <li class="list-group-item">Musculo secundario: @Exercise.SecondaryMuscles</li>
+                    </ul>
+                    <div class="card-body">
+                        <a asp-action="Details" class="card-link">Ver Ejercicio</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

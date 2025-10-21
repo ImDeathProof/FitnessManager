@@ -38,6 +38,8 @@ builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDietaRepository, DietaRepository>();
 builder.Services.AddScoped<IDietaService, DietaService>();
+builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
 
 var app = builder.Build();
 
