@@ -9,7 +9,7 @@ using FitnessManager.Models;
 
 namespace FitnessManager.Data
 {
-    public class DataContext : IdentityDbContext
+    public class DataContext : IdentityDbContext<Usuario>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

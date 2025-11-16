@@ -1,7 +1,7 @@
 @model IEnumerable<FitnessManager.Models.Exercise>
 
 <div class="row container py-5 text-white justify-content-center">
-    <div class="col-md-8 gradientT1 rounded">
+    <div class="col-md-8 gradientT1 rounded pt-3">
         <h2>Lista de Ejercicios</h2>
         <form asp-action="Index" method="get">
             <div class="form-group">
@@ -15,8 +15,9 @@
         <div class="d-flex justify-content-center flex-wrap gap-3 container overflow-auto" style="max-height: 80vh;">
             @foreach (var Exercise in Model)
             {
+                var safeName = Exercise.Name.Replace(" ", "_").Replace("/", "_");
                 <div class="card  bg-dark-subtle" style="width: 35rem;">
-                    <img src="..." class="card-img-top" alt="...">
+                    <img src="@Url.Content($"~/exercises/{safeName}/0.jpg")" class="card-img-top" alt="@Exercise.Name">
                     <div class="card-body overflow-hidden text-truncate" style="max-height: 5rem;">
                         <h5 class="card-title">@Exercise.Name</h5>
                         <p class="card-text" style="max-width: 25rem;">Instrucciones: @Exercise.Instructions</p>
@@ -27,7 +28,7 @@
                         <li class="list-group-item">Musculo secundario: @Exercise.SecondaryMuscles</li>
                     </ul>
                     <div class="card-body">
-                        <a asp-action="Details" class="card-link">Ver Ejercicio</a>
+                        <a asp-action="Details" asp-route-id="@Exercise.Id" class="card-link">Ver Ejercicio</a>
                     </div>
                 </div>
             }

@@ -22,6 +22,19 @@
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
+                <i class="bi bi-info-circle-fill text-muted" data-bs-toggle="tooltip-password" data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-html="true"
+                    title="
+                    <ul class='text-start mb-0'>
+                        <li>Tener al menos 8 caracteres</li>
+                        <li>Tener minúsculas</li>
+                        <li>Tener mayúsculas</li>
+                        <li>Tener caracteres especiales</li>
+                        <li>No necesita números</li>
+                        <li>Tener al menos un carácter único</li>
+                    </ul>
+                    "></i>
                 <input type="password" class="form-control" id="password" name="Password" required>
             </div>
             <div class="mb-3">
@@ -35,3 +48,10 @@
         </p>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip-password"]');
+        tooltipTriggerList.forEach(t => new bootstrap.Tooltip(t));
+    });
+</script>

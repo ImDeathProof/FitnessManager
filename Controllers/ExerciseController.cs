@@ -31,6 +31,32 @@ namespace FitnessManager.Controllers
             }
             return View(exercises);
         }
+        // GET: Exercise/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                TempData["ErrorMessage"] = "ID null.";
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                var exercise = await _exerciseService.GetExerciseByIdAsync(id.Value);
+                if (exercise == null)
+                {
+                    TempData["ErrorMessage"] = "Ejercicio no encontrado.";
+                    return RedirectToAction("Index");
+                }
+                return View(exercise);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving exercise details for ID {Id}", id);
+                TempData["ErrorMessage"] = "Ocurrió un error al obtener los detalles del ejercicio.";
+                return RedirectToAction("Index");
+            }
+            
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

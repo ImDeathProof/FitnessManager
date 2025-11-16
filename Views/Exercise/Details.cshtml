@@ -1,0 +1,74 @@
+@model FitnessManager.Models.Exercise
+
+<div class="row container py-5 text-white justify-content-center">
+    <div class="col-md-8">
+        <div class="container">
+            <div class="card">
+                <div class="card-header gradientT1">
+                    <h2 class="text-light">Ejercicio: @Model.Name</h2>
+                </div>
+                <div class="card-image-top text-center my-3">
+                    <div id="carousel1" class="carousel slide carousel-fade">
+                        <div class="carousel-inner">
+                            @{var safeName = @Model.Name.Replace(" ", "_").Replace("/", "_");}
+                            @for (int i = 0; i < 3; i++){
+                                var path = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "exercises", safeName, $"{i}.jpg");
+                                if (!System.IO.File.Exists(path))
+                                {
+                                    continue; // si no existe, pasa al siguiente i
+                                }
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@Url.Content($"~/exercises/{safeName}/{i}.jpg")" alt="Imagen de @Model.Name" class="d-block w-100">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body bg-dark">
+                    @{
+                        if (TempData["ErrorMessage"] != null) {
+                            <div class="alert alert-danger" role="alert">
+                                <p>@TempData["ErrorMessage"]</p>
+                            </div>
+                        }else if (TempData["SuccessMessage"] != null) {
+                            <div class="alert alert-success" role="alert">
+                                <p>@TempData["SuccessMessage"]</p>
+                            </div>
+                        }
+                    }
+                    <h5 class="text-white"><b>Categoria:</b> @Model.Category</h5>
+                    <h5 class="text-white"><b>Tipo de ejercicio:</b> @Model.Force</h5>
+                    <h5 class="text-white"><b>Nivel:</b> @Model.Level</h5>
+                    <h5 class="text-white"><b>Maquina:</b> @Model.Mechanic</h5>
+                    <h5 class="text-white"><b>Equipamiento:</b> @Model.Equipment</h5>
+                    <h5 class="text-white"><b>Musculo principal:</b> @Model.PrimaryMuscles</h5>
+                    <h5 class="text-white"><b>Musculo secundario:</b> @Model.SecondaryMuscles</h5>
+                    <h5 class="text-white"><b>Instrucciones:</b></h5>
+                    <p class="text-white">@Model.Instructions</p>
+                </div>
+                <div class="card-footer bg-dark">
+                    <a class="btn btn-detail-gradient" asp-action="Index"><i class="fa-solid fa-arrow-left me-1"></i>Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Name 
+Force 
+Level 
+Mechanic 
+Equipment 
+PrimaryMuscles 
+SecondaryMuscles
+Instructions 
+Category 
+Image  *@

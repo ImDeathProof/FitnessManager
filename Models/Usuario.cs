@@ -17,6 +17,7 @@ namespace FitnessManager.Models
         public string? Nombre { get; set; }
         public string? Apellido { get; set; }
         public int? Edad { get; set; }
+        public DateTime FechaNacimiento { get; set; }
         public double? Peso { get; set; }
         public double? Altura { get; set; }
         public string? Objetivo { get; set; }

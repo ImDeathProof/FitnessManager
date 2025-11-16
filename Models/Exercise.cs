@@ -12,7 +12,6 @@ namespace FitnessManager.Models
 
         [Required]
         public string? Name { get; set; }
-
         public string? Force { get; set; }
         public string? Level { get; set; }
         public string? Mechanic { get; set; }
