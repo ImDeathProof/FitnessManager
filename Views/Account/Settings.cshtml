@@ -1,0 +1,60 @@
+@using FitnessManager.ViewModels
+@model string
+
+<div class="dashboard-container d-flex" style="height: 100vh; overflow: hidden;">
+    <!-- SIDEBAR / OFFCANVAS -->
+    <div class="offcanvas-lg offcanvas-start sidebar gradientT1 border-end" tabindex="-1" id="sidebarMenu">
+
+        <div class="offcanvas-header d-lg-none">
+            <h5 class="offcanvas-title">Menú</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body p-3">
+            <nav>
+                <div class="mb-4 d-flex w-100 text-center align-items-center">
+                    <img src="https://thumbs.dreamstime.com/b/default-placeholder-fitness-trainer-t-shirt-half-length-portrait-photo-avatar-gray-color-113622065.jpg" alt="Avatar" 
+                    class="rounded-circle mb-2 " style="width: 60px; height: 60px; object-fit: cover;">
+                    <h5 class="ps-1">@ViewData["Username"]</h5>
+                </div>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a class="d-flex align-items-center text-decoration-none text-dark"
+                        asp-controller="Account" asp-action="Settings" asp-route-view="profile">
+                            Modificar perfil
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a class="d-flex align-items-center text-decoration-none text-dark"
+                        asp-controller="Account" asp-action="Settings" asp-route-view="password-change">
+                            Cambiar contraseña
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a class="d-flex align-items-center text-decoration-none text-danger"
+                        asp-controller="Account" asp-action="Settings" asp-route-view="delete-account">
+                            Eliminar cuenta
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="flex-grow-1 p-4 overflow-auto text-white">
+        @if (Model == "profile")
+        {
+            @await Html.PartialAsync("ProfileSettingsPartial")
+        }
+        else if (Model == "password-change")
+        {
+            @await Html.PartialAsync("ChangePasswordPartial", model: new ChangePasswordViewModel())
+        }
+        else if (Model == "delete-account")
+        {
+            @await Html.PartialAsync("DeleteAccountPartial", model: new DeleteAccountViewModel())
+        }
+    </div>
+</div>

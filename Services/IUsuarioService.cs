@@ -16,5 +16,8 @@ namespace FitnessManager.Services
         Task<DateTime> GetFechaNacimientoAsync(string userId);
         Task UpdateUserAsync(Usuario user);
         Task UpdatePesoAsync(string userId, float nuevoPeso);
+        Task<int> GetEdadAsync(string userId);
+        Task SetEdadAsync(string userId, int edad);
+        Task DeleteUserAsync(Usuario user);
     }
 }

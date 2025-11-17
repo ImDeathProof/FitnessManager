@@ -15,6 +15,58 @@ namespace FitnessManager.Services
         {
             _usuarioRepository = usuarioRepository;
         }
+
+        public async Task DeleteUserAsync(Usuario user)
+        {
+            if (user == null)
+            {
+                throw new UsuarioServiceException("Usuario nulo");
+            }
+            try
+            {
+                user.IsActive = false;
+                await _usuarioRepository.UpdateUserAsync(user);
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al eliminar el usuario", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al eliminar el usuario", ex);
+            }
+        }
+
+        public async Task<int> GetEdadAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UsuarioServiceException("ID Nulo o vacio");
+            }
+            try
+            {
+                var fechaNacimiento =  await _usuarioRepository.GetFechaNacimientoAsync(userId);
+                var today = DateTime.Today;
+                var edad = today.Year - fechaNacimiento.Year;
+                if (fechaNacimiento.Date > today.AddYears(-edad)) edad--;
+                if(edad < 0)
+                {
+                    throw new UsuarioServiceException("Fecha de nacimiento invalida");
+                }
+                //setear la edad calculada para mantener actualizada la edad en la base de datos
+                await SetEdadAsync(userId, edad);
+                return edad;
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al obtener la edad", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al obtener la edad", ex);
+            }
+        }
+
         public async Task<DateTime> GetFechaNacimientoAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -102,6 +154,32 @@ namespace FitnessManager.Services
             catch (Exception ex)
             {
                 throw new UsuarioServiceException("Error al obtener el usuario por ID", ex);
+            }
+        }
+
+        public async Task SetEdadAsync(string userId, int edad)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UsuarioServiceException("ID Nulo o vacio");
+            }
+            try
+            {
+                var aux = await _usuarioRepository.GetUserByIdAsync(userId);
+                if (aux == null)
+                {
+                    throw new UsuarioServiceException("Usuario no encontrado");
+                }
+                aux.Edad = edad;
+                await _usuarioRepository.UpdateUserAsync(aux);
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al actualizar la edad", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al actualizar la edad", ex);
             }
         }
 

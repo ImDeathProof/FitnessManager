@@ -137,3 +137,20 @@ table th, table td {
   text-align: left;
   border-bottom: 1px solid #444;
 }
+
+.sidebar {
+    width: 280px;
+}
+
+.dashboard-container {
+  height: calc(100vh - 90px);
+}
+
+/* Evitar que el contenido se superponga */
+@media (min-width: 992px) {
+    .offcanvas-lg {
+        transform: none !important;
+        visibility: visible !important;
+        position: static !important;
+    }
+}
