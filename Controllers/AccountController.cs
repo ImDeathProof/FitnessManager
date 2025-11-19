@@ -19,10 +19,11 @@ public class AccountController : Controller
     private readonly SignInManager<Usuario> _signInManager;
     private readonly IUsuarioService _usuarioService;
 
-    public AccountController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager)
+    public AccountController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, IUsuarioService usuarioService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _usuarioService = usuarioService;
     }
 
     [HttpGet]
@@ -33,14 +34,31 @@ public class AccountController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid){
+            ModelState.AddModelError(string.Empty, "Complete todos los campos requeridos.");
+            return View(model);
+            }
+        try
+        {
+            var status = await _usuarioService.GetUserStatusAsync(model.Username);
+            if (!status)
+            {
+                ModelState.AddModelError(string.Empty, "La cuenta está desactivada. Por favor, contacte al soporte.");
+                return View(model);
+            }
 
-        var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
-        if (result.Succeeded) return RedirectToAction("Index", "Home");
-
-        ModelState.AddModelError("", "Correo o contraseña incorrectos");
-        return View(model);
+            if (result.Succeeded) return RedirectToAction("Profile", "Account");
+            
+            ModelState.AddModelError(string.Empty, "Correo o contraseña incorrectos");
+            return View(model);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error al iniciar sesión. Por favor, inténtelo de nuevo más tarde.";
+            return View(model);
+        }
     }
 
     [HttpGet]
@@ -51,28 +69,42 @@ public class AccountController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
-
-        var user = new Usuario
+        if (!ModelState.IsValid)
         {
-            UserName = model.Username,
-            Email = model.Email,
-            Nombre = model.Nombre,
-            Apellido = model.Apellido,
-            IsActive = true,
-            FechaRegistro = DateTime.UtcNow,
-            FechaNacimiento = DateTime.UtcNow
-        };
-        var result = await _userManager.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
+            ModelState.AddModelError(string.Empty, "Por favor, complete todos los campos requeridos.");
+            return View(model);
+        }
+        try
         {
-            await _signInManager.SignInAsync(user, false);
-            return RedirectToAction("Index", "Home");
+            if(await _usuarioService.UsernameExistsAsync(model.Username))
+            {
+                ModelState.AddModelError(string.Empty, "El nombre de usuario ya está en uso. Por favor, elija otro.");
+                return View(model);
+            }
+            var user = new Usuario
+            {
+                UserName = model.Username,
+                Email = model.Email,
+                Nombre = model.Nombre,
+                Apellido = model.Apellido,
+                IsActive = true,
+                FechaRegistro = DateTime.UtcNow,
+                FechaNacimiento = DateTime.UtcNow
+            };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                return RedirectToAction("Profile", "Account");
+            }
+            TempData["ErrorMessage"] = "Ocurrió un error al registrar la cuenta. Por favor, inténtelo de nuevo.";
+            return View(model);
+        }catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error al registrar la cuenta. Por favor, inténtelo de nuevo más tarde.";
+            return View(model);
         }
 
-        foreach (var error in result.Errors) ModelState.AddModelError("", error.Description);
-        return View(model);
     }
     [Authorize]
     public async Task<IActionResult> Profile()
@@ -97,16 +129,25 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult>  Settings(string view)
     {
-        ViewData["Title"] = "Configurariones";
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null) return RedirectToAction("Login", "Account");
-        ViewData["UserName"] = user.UserName;
-        ViewData["Avatar"] = user.AvatarUrl;
-        if (string.IsNullOrEmpty(view))
+        try
         {
-            view = "profile";
+            ViewData["ErrorMessage"] = null;
+            ViewData["successMessage"] = null;
+            ViewData["Title"] = "Configurariones";
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+            ViewData["UserName"] = user.UserName;
+            ViewData["Avatar"] = user.AvatarUrl;
+            if (string.IsNullOrEmpty(view))
+            {
+                view = "profile";
+            }
+            return View(model : view);
+        }catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error al cargar la página de configuraciones. Por favor, inténtelo de nuevo más tarde.";
+            return RedirectToAction("Profile", "Account");
         }
-        return View(model : view);
     }
     [Authorize]
     [HttpPost]
@@ -114,24 +155,27 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid)
         {
+            ModelState.AddModelError(string.Empty, "Por favor, complete todos los campos requeridos.");
             return View("Settings", model: "password-change");
         }
         try
         {
-            
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
+                
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-        var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-        if (result.Succeeded)
-        {
-            await _signInManager.RefreshSignInAsync(user);
-            return RedirectToAction("Settings", new { view = "password-change" });
-        }
-        return View("Settings", model: "password-change");
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                TempData["SuccessMessage"] = "Contraseña cambiada exitosamente.";
+                return RedirectToAction("Settings", new { view = "password-change" });
+            }
+            TempData["ErrorMessage"] = "Ocurrió un error al cambiar la contraseña. Por favor, inténtelo de nuevo.";
+            return View("Settings", model: "password-change");
         }
         catch (Exception)
         {
@@ -139,12 +183,16 @@ public class AccountController : Controller
             return View("Settings", model: "password-change");
         }
     }
+
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> DeleteAccount(DeleteAccountViewModel model)
     {
+        ViewData["ErrorMessage"] = null;
+        ViewData["successMessage"] = null;
         if (!ModelState.IsValid)
         {
+            ViewData["ErrorMessage"] = "Todos los campos son obligatorios.";
             return View("Settings", model: "delete-account");
         }
         try
@@ -155,20 +203,24 @@ public class AccountController : Controller
                 return RedirectToAction("Login", "Account");
             }
 
-            var result = await _userManager.DeleteAsync(user);
-            if (result.Succeeded)
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!passwordCheck)
             {
-                await _signInManager.SignOutAsync();
-                return RedirectToAction("Index", "Home");
+                ViewData["ErrorMessage"] = "La contraseña es incorrecta.";
+                return View("Settings", model: "delete-account");
             }
-            ViewData["ErrorMessage"] = "Ocurrió un error al eliminar la cuenta. Por favor, inténtelo de nuevo.";
-            return View("Settings", model: "delete-account");
+
+            await _usuarioService.DeleteUserAsync(user);
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine("error: " + ex.Message);
             ViewData["ErrorMessage"] = "Ocurrió un error al eliminar la cuenta. Por favor, inténtelo de nuevo.";
             return View("Settings", model: "delete-account");
         }
+
     }
 
     [HttpPost]

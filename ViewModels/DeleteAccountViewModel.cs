@@ -9,14 +9,14 @@ namespace FitnessManager.ViewModels
 {
     public class DeleteAccountViewModel
     {
-        [Required]
+        [Required (ErrorMessage = "La contraseña es obligatoria.")]
         [DataType(DataType.Password)]
         [DisplayName("Contraseña")]
         public string Password { get; set; }
 
-        [Required]
+        [Required (ErrorMessage = "Debe confirmar la eliminación de la cuenta.")]
         [DisplayName("Confirmar eliminación de cuenta")]
         public bool ConfirmDeletion { get; set; }
         
-    }
+    }   
 }

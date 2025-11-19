@@ -40,6 +40,8 @@ builder.Services.AddScoped<IDietaRepository, DietaRepository>();
 builder.Services.AddScoped<IDietaService, DietaService>();
 builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 var app = builder.Build();
 

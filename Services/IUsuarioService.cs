@@ -19,5 +19,7 @@ namespace FitnessManager.Services
         Task<int> GetEdadAsync(string userId);
         Task SetEdadAsync(string userId, int edad);
         Task DeleteUserAsync(Usuario user);
+        Task ActivateUserAsync(Usuario user);
+        Task<bool> GetUserStatusAsync(string username);
     }
 }

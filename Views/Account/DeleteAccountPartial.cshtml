@@ -2,15 +2,16 @@
 
 <div class="container mt-5" style="max-width: 600px;">
     <h2 class="mb-4 text-danger">Eliminar Cuenta</h2>
-    <p class="mb-4">¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible y se perderán todos tus datos.</p>
+    <partial name="_Alert"/>
+    <p class="mb-4">¿Estás seguro de que deseas eliminar tu cuenta? En caso de desearlo podras reactivar la cuenta contactando al soporte.</p>
     <form asp-action="DeleteAccount" method="post">
         <div class="mb-3 form-check">
-            <input for="ConfirmDeletion" class="form-check-input" type="checkbox" />
+            <input name="ConfirmDeletion" asp-for="ConfirmDeletion" class="form-check-input" type="checkbox" />
             <label for="ConfirmDeletion" class="form-check-label text-danger">Confirmar eliminación de cuenta</label>
             <span asp-validation-for="ConfirmDeletion" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="Password" class="form-label">Contraseña</label>
+            <label asp-for="Password" class="form-label">Contraseña</label>
             <input type="Password" class="form-control" id="Password" name="Password" required>
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>

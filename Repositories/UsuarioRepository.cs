@@ -42,6 +42,21 @@ namespace FitnessManager.Repositories
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
+
+        public async Task<Usuario> GetUserByUsernameAsync(string username)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.UserName == username);
+        }
+
+        public async Task<bool> GetUserStatusAsync(string username)
+        {
+            return await _context.Users
+                .Where(u => u.UserName == username)
+                .Select(u => u.IsActive)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task UpdateUserAsync(Usuario user)
         {
             _context.Users.Update(user);

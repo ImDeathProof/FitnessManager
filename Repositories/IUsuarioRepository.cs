@@ -10,6 +10,8 @@ namespace FitnessManager.Repositories
     {
         Task<Usuario> GetUserByEmailAsync(string email);
         Task<Usuario> GetUserByIdAsync(string userId);
+        Task<Usuario> GetUserByUsernameAsync(string username);
+        Task<bool> GetUserStatusAsync(string username);
         Task<bool> UsuarioExistsAsync(string email);
         Task<bool> UsernameExistsAsync(string username);
         Task<DateTime> GetFechaRegistroAsync(string userId);

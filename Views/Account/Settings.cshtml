@@ -1,7 +1,7 @@
 @using FitnessManager.ViewModels
 @model string
 
-<div class="dashboard-container d-flex" style="height: 100vh; overflow: hidden;">
+<div class="dashboard-container d-flex border" style="height: 100vh; overflow: hidden;">
     <!-- SIDEBAR / OFFCANVAS -->
     <div class="offcanvas-lg offcanvas-start sidebar gradientT1 border-end" tabindex="-1" id="sidebarMenu">
 
@@ -46,7 +46,7 @@
     <div class="flex-grow-1 p-4 overflow-auto text-white">
         @if (Model == "profile")
         {
-            @await Html.PartialAsync("ProfileSettingsPartial")
+            @await Html.PartialAsync("AccountSettingsPartial", model: new AccountSettingsViewModel())
         }
         else if (Model == "password-change")
         {

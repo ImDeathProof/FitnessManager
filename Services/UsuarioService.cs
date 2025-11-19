@@ -16,6 +16,27 @@ namespace FitnessManager.Services
             _usuarioRepository = usuarioRepository;
         }
 
+        public async Task ActivateUserAsync(Usuario user)
+        {
+            if (user == null)
+            {
+                throw new UsuarioServiceException("Usuario nulo");
+            }
+            try
+            {
+                user.IsActive = true;
+                await _usuarioRepository.UpdateUserAsync(user);
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al activar el usuario", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al activar el usuario", ex);
+            }
+        }
+
         public async Task DeleteUserAsync(Usuario user)
         {
             if (user == null)
@@ -154,6 +175,26 @@ namespace FitnessManager.Services
             catch (Exception ex)
             {
                 throw new UsuarioServiceException("Error al obtener el usuario por ID", ex);
+            }
+        }
+
+        public async Task<bool> GetUserStatusAsync(string username)
+        {
+            if(string.IsNullOrEmpty(username))
+            {
+                throw new UsuarioServiceException("Username nulo o vacio");
+            }
+            try
+            {
+                return await _usuarioRepository.GetUserStatusAsync(username);
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al obtener el estado del usuario", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al obtener el estado del usuario", ex);
             }
         }
 
