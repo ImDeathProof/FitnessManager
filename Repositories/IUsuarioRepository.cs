@@ -17,6 +17,7 @@ namespace FitnessManager.Repositories
         Task<bool> UsernameExistsAsync(string username, string excludeUserId);
         Task<DateTime> GetFechaRegistroAsync(string userId);
         Task<DateTime> GetFechaNacimientoAsync(string userId);
+        Task<string> GetAvatarUrlAsync(string userId);
         Task UpdateUserAsync(Usuario user);
     }
 }

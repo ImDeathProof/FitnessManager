@@ -15,6 +15,15 @@ namespace FitnessManager.Repositories
         {
             _context = context;
         }
+
+        public async Task<string> GetAvatarUrlAsync(string userId)
+        {
+            return await _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.AvatarUrl)
+                .FirstOrDefaultAsync() ?? string.Empty;
+        }
+
         public async Task<DateTime> GetFechaNacimientoAsync(string userId)
         {
             return await _context.Users

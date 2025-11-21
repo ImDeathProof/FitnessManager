@@ -2,9 +2,10 @@
 
 <div class="container mt-5" style="max-width: 600px;">
     <h2 class="mb-4 text-danger">Eliminar Cuenta</h2>
-    <partial name="_Alert"/>
     <p class="mb-4">¿Estás seguro de que deseas eliminar tu cuenta? En caso de desearlo podras reactivar la cuenta contactando al soporte.</p>
     <form asp-action="DeleteAccount" method="post">
+        <partial name="_Alert" />
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3 form-check">
             <input name="ConfirmDeletion" asp-for="ConfirmDeletion" class="form-check-input" type="checkbox" />
             <label for="ConfirmDeletion" class="form-check-label text-danger">Confirmar eliminación de cuenta</label>

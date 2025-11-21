@@ -1,0 +1,25 @@
+@model FitnessManager.ViewModels.AvatarSelectorViewModel
+
+<div class="container mt-5">
+    <h2 class="mb-4">Seleccionar Avatar</h2>
+    <form asp-action="SelectAvatar" method="post">
+        <partial name="_Alert" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="row">
+            @foreach (var avatarUrl in Model.AvailableAvatarUrls)
+            {
+                <div class="col-3 mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="SelectedAvatarUrl" value="@avatarUrl" @(Model.SelectedAvatarUrl == avatarUrl ? "checked" : "") />
+                        <label class="form-check-label" for="@avatarUrl.GetHashCode()">
+                            <img src="@avatarUrl" alt="Avatar" class="img-fluid rounded" />
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Avatar</button>
+    </form>
+</div>
+
+

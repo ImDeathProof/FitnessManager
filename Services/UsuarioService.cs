@@ -95,6 +95,31 @@ namespace FitnessManager.Services
             }
         }
 
+        public async Task<AvatarSelectorViewModel> GetAvatarSelectorAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UsuarioServiceException("ID Nulo o vacio");
+            }
+            try
+            {
+                var avatarUrl = await _usuarioRepository.GetAvatarUrlAsync(userId);
+                var avatarSelector = new AvatarSelectorViewModel
+                {
+                    SelectedAvatarUrl = avatarUrl
+                };
+                return avatarSelector;
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al obtener el selector de avatar", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al obtener el selector de avatar", ex);
+            }
+        }
+
         public async Task<int> GetEdadAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))

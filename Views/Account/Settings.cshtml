@@ -3,7 +3,7 @@
 
 <div class="dashboard-container d-flex border" style="height: 100vh; overflow: hidden;">
     <!-- SIDEBAR / OFFCANVAS -->
-    <div class="offcanvas-lg offcanvas-start sidebar gradientT1 border-end" tabindex="-1" id="sidebarMenu">
+    <div class="offcanvas-lg offcanvas-start sidebar gradientT1 border-end col-3" tabindex="-1" id="sidebarMenu">
 
         <div class="offcanvas-header d-lg-none">
             <h5 class="offcanvas-title">Menú</h5>
@@ -26,6 +26,12 @@
                     </li>
                     <li class="mb-2">
                         <a class="d-flex align-items-center text-decoration-none text-dark"
+                        asp-controller="Account" asp-action="Settings" asp-route-view="avatar-selector">
+                            Modificar avatar
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a class="d-flex align-items-center text-decoration-none text-dark"
                         asp-controller="Account" asp-action="Settings" asp-route-view="password-change">
                             Cambiar contraseña
                         </a>
@@ -43,7 +49,7 @@
     </div>
 
     <!-- CONTENT -->
-    <div class="flex-grow-1 p-4 overflow-auto text-white">
+    <div class="flex-grow-1 p-4 overflow-auto text-white col-9">
         @if (Model.SelectedOption == "account-settings")
         {
             @await Html.PartialAsync("AccountSettingsPartial", model: Model.AccountSettings)
@@ -55,6 +61,10 @@
         else if (Model.SelectedOption == "delete-account")
         {
             @await Html.PartialAsync("DeleteAccountPartial", model: Model.DeleteAccount)
+        }
+        else if (Model.SelectedOption == "avatar-selector")
+        {
+            @await Html.PartialAsync("AvatarSelectorPartial", model: Model.AvatarSelector)
         }
     </div>
 </div>

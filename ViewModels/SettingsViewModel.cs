@@ -12,5 +12,6 @@ namespace FitnessManager.ViewModels
         public AccountSettingsViewModel AccountSettings { get; set; }
         public ChangePasswordViewModel ChangePassword { get; set; }
         public DeleteAccountViewModel DeleteAccount { get; set; }
+        public AvatarSelectorViewModel AvatarSelector { get; set; }
     }
 }

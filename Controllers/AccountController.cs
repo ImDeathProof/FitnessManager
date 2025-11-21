@@ -141,20 +141,21 @@ public class AccountController : Controller
             {
                 view = "account-settings";
             }
-            var model = new SettingsViewModel
-            {
-                SelectedOption = view,
-                AccountSettings = new AccountSettingsViewModel()
+            var model = await BuildSettingsViewModel(view);
+            // var model = new SettingsViewModel
+            // {
+            //     SelectedOption = view,
+            //     AccountSettings = new AccountSettingsViewModel()
 
-            };
-            model.AccountSettings.Nombre = user.Nombre;
-            model.AccountSettings.Apellido = user.Apellido;
-            model.AccountSettings.Username = user.UserName;
-            model.AccountSettings.Email = user.Email;
-            model.AccountSettings.Altura = (float)(user.Altura ?? 0);
-            model.AccountSettings.Peso = (float)(user.Peso ?? 0);
-            model.AccountSettings.Objetivo = user.Objetivo;
-            model.AccountSettings.FechaNacimiento = user.FechaNacimiento;
+            // };
+            // model.AccountSettings.Nombre = user.Nombre;
+            // model.AccountSettings.Apellido = user.Apellido;
+            // model.AccountSettings.Username = user.UserName;
+            // model.AccountSettings.Email = user.Email;
+            // model.AccountSettings.Altura = (float)(user.Altura ?? 0);
+            // model.AccountSettings.Peso = (float)(user.Peso ?? 0);
+            // model.AccountSettings.Objetivo = user.Objetivo;
+            // model.AccountSettings.FechaNacimiento = user.FechaNacimiento;
 
             return View(model);
         }
@@ -288,6 +289,39 @@ public class AccountController : Controller
             return RedirectToAction("Settings", new { view = "account-settings" });
         }
     }
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> SelectAvatar(AvatarSelectorViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            ModelState.AddModelError(string.Empty, "Por favor, seleccione un avatar.");
+            var settingsModel = await BuildSettingsViewModel("avatar-selector", new SettingsViewModel
+            {
+                AvatarSelector = model
+            });
+            return View("Settings", settingsModel);
+        }
+        try
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            user.AvatarUrl = model.SelectedAvatarUrl;
+            await _userManager.UpdateAsync(user);
+
+            TempData["SuccessMessage"] = "Avatar actualizado exitosamente.";
+            return RedirectToAction("Settings", new { view = "avatar-selector" });
+
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error al actualizar el avatar. Por favor, inténtelo de nuevo.";
+            return RedirectToAction("Settings", new { view = "avatar-selector" });
+        }
+    }
 
     [HttpPost]
     public async Task<IActionResult> Logout()
@@ -306,6 +340,17 @@ public class AccountController : Controller
             model.AccountSettings ??= await _usuarioService.GetAccountSettingsAsync(_userManager.GetUserId(User));
             model.ChangePassword ??= new ChangePasswordViewModel();
             model.DeleteAccount ??= new DeleteAccountViewModel();
+            model.AvatarSelector ??= await _usuarioService.GetAvatarSelectorAsync(_userManager.GetUserId(User));
+            model.AvatarSelector.AvailableAvatarUrls = new List<string>
+            {
+                "/avatars/Default_1.png",
+                "/avatars/Default_2.png",
+                "/avatars/Default_3.png",
+                "/avatars/Default_4.png",
+                "/avatars/Default_5.png",
+                "/avatars/Default_6.png",
+                "/avatars/Default.png"
+            };
             return model;
         }catch(Exception ex)
         {

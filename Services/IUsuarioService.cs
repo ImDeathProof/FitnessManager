@@ -24,5 +24,6 @@ namespace FitnessManager.Services
         Task ActivateUserAsync(Usuario user);
         Task<bool> GetUserStatusAsync(string username);
         Task<AccountSettingsViewModel> GetAccountSettingsAsync(string userId);
+        Task<AvatarSelectorViewModel> GetAvatarSelectorAsync(string userId);
     }
 }
