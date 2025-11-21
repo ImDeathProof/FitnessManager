@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FitnessManager.Models;
 using FitnessManager.Repositories;
+using FitnessManager.ViewModels;
 
 namespace FitnessManager.Services
 {
@@ -55,6 +56,42 @@ namespace FitnessManager.Services
             catch (Exception ex)
             {
                 throw new UsuarioServiceException("Error al eliminar el usuario", ex);
+            }
+        }
+
+        public async Task<AccountSettingsViewModel> GetAccountSettingsAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UsuarioServiceException("ID Nulo o vacio");
+            }
+            try
+            {
+                var usuario = await _usuarioRepository.GetUserByIdAsync(userId);
+                if (usuario == null)
+                {
+                    throw new UsuarioServiceException("Usuario no encontrado");
+                }
+                var accountSettings = new AccountSettingsViewModel
+                {
+                    Nombre = usuario.Nombre,
+                    Apellido = usuario.Apellido,
+                    Username = usuario.UserName,
+                    Email = usuario.Email,
+                    Altura = (float)(usuario.Altura ?? 0),
+                    Peso = (float)(usuario.Peso ?? 0),
+                    Objetivo = usuario.Objetivo,
+                    FechaNacimiento = usuario.FechaNacimiento
+                };
+                return accountSettings;
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al obtener la configuración de la cuenta", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al obtener la configuración de la cuenta", ex);
             }
         }
 
@@ -279,6 +316,26 @@ namespace FitnessManager.Services
             try
             {
                 return await _usuarioRepository.UsernameExistsAsync(username);
+            }
+            catch (DbException dbEx)
+            {
+                throw new UsuarioServiceException("Error de base de datos al verificar si el username existe", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioServiceException("Error al verificar si el username existe", ex);
+            }
+        }
+
+        public async Task<bool> UsernameExistsAsync(string username, string excludeUserId)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new UsuarioServiceException("Username nulo o vacio");
+            }
+            try
+            {
+                return await _usuarioRepository.UsernameExistsAsync(username, excludeUserId);
             }
             catch (DbException dbEx)
             {

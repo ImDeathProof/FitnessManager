@@ -69,7 +69,11 @@ namespace FitnessManager.Repositories
             return await _context.Users
                 .AnyAsync(u => u.UserName == username);
         }
-
+        public async Task<bool> UsernameExistsAsync(string username, string excludeUserId)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.UserName == username && u.Id != excludeUserId);
+        }
         public async Task<bool> UsuarioExistsAsync(string email)
         {
             return await _context.Users

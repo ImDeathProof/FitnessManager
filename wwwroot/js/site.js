@@ -7,5 +7,4 @@ flatpickr("#FechaNacimiento", {
     altInput: true,
     altFormat: "d/m/Y",
     locale: "es",
-    defaultDate: "1990-01-01"
 });

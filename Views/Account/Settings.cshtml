@@ -1,5 +1,5 @@
 @using FitnessManager.ViewModels
-@model string
+@model FitnessManager.ViewModels.SettingsViewModel
 
 <div class="dashboard-container d-flex border" style="height: 100vh; overflow: hidden;">
     <!-- SIDEBAR / OFFCANVAS -->
@@ -13,15 +13,15 @@
         <div class="offcanvas-body p-3">
             <nav>
                 <div class="mb-4 d-flex w-100 text-center align-items-center">
-                    <img src="https://thumbs.dreamstime.com/b/default-placeholder-fitness-trainer-t-shirt-half-length-portrait-photo-avatar-gray-color-113622065.jpg" alt="Avatar" 
+                    <img src="@TempData["Avatar"]" alt="Avatar" 
                     class="rounded-circle mb-2 " style="width: 60px; height: 60px; object-fit: cover;">
-                    <h5 class="ps-1">@ViewData["Username"]</h5>
+                    <h5 class="ps-1">@TempData["Username"]</h5>
                 </div>
                 <ul class="list-unstyled">
                     <li class="mb-2">
                         <a class="d-flex align-items-center text-decoration-none text-dark"
-                        asp-controller="Account" asp-action="Settings" asp-route-view="profile">
-                            Modificar perfil
+                        asp-controller="Account" asp-action="Settings" asp-route-view="account-settings">
+                            Modificar cuenta
                         </a>
                     </li>
                     <li class="mb-2">
@@ -44,17 +44,17 @@
 
     <!-- CONTENT -->
     <div class="flex-grow-1 p-4 overflow-auto text-white">
-        @if (Model == "profile")
+        @if (Model.SelectedOption == "account-settings")
         {
-            @await Html.PartialAsync("AccountSettingsPartial", model: new AccountSettingsViewModel())
+            @await Html.PartialAsync("AccountSettingsPartial", model: Model.AccountSettings)
         }
-        else if (Model == "password-change")
+        else if (Model.SelectedOption == "password-change")
         {
-            @await Html.PartialAsync("ChangePasswordPartial", model: new ChangePasswordViewModel())
+            @await Html.PartialAsync("ChangePasswordPartial", model: Model.ChangePassword)
         }
-        else if (Model == "delete-account")
+        else if (Model.SelectedOption == "delete-account")
         {
-            @await Html.PartialAsync("DeleteAccountPartial", model: new DeleteAccountViewModel())
+            @await Html.PartialAsync("DeleteAccountPartial", model: Model.DeleteAccount)
         }
     </div>
 </div>

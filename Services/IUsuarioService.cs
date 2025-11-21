@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FitnessManager.Models;
+using FitnessManager.ViewModels;
 
 namespace FitnessManager.Services
 {
@@ -12,6 +13,7 @@ namespace FitnessManager.Services
         Task<Usuario> GetUserByIdAsync(string userId);
         Task<bool> UsuarioExistsAsync(string email);
         Task<bool> UsernameExistsAsync(string username);
+        Task<bool> UsernameExistsAsync(string username, string excludeUserId);
         Task<DateTime> GetFechaRegistroAsync(string userId);
         Task<DateTime> GetFechaNacimientoAsync(string userId);
         Task UpdateUserAsync(Usuario user);
@@ -21,5 +23,6 @@ namespace FitnessManager.Services
         Task DeleteUserAsync(Usuario user);
         Task ActivateUserAsync(Usuario user);
         Task<bool> GetUserStatusAsync(string username);
+        Task<AccountSettingsViewModel> GetAccountSettingsAsync(string userId);
     }
 }

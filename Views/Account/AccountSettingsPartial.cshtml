@@ -1,4 +1,58 @@
 @model FitnessManager.ViewModels.AccountSettingsViewModel
 
-<input asp-for="FechaNacimiento" class="form-control" id="FechaNacimiento">
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="mb-4">Modificar Cuenta</h2>
+    <form asp-action="AccountSettingsUpdate" method="post">
+        <partial name="_Alert" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="row">
+            <div class="col-6">
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Apellido" class="form-label">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label">Username</label>
+                    <input asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input type="email" asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mb-3">
+                    <label asp-for="Altura" class="form-label">Altura</label>
+                    <input type="number" asp-for="Altura" class="form-control" />
+                    <span asp-validation-for="Altura" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Peso" class="form-label">Peso</label>
+                    <input type="number" asp-for="Peso" class="form-control" />
+                    <span asp-validation-for="Peso" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input asp-for="FechaNacimiento" class="form-control" id="FechaNacimiento">
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Objetivo" class="form-label">Objetivo</label>
+            <textarea type="text" asp-for="Objetivo" class="form-control" style="resize: none;"rows="6"></textarea>
+            <span asp-validation-for="Objetivo" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Información</button>
+    </form>
+</div>
+
 

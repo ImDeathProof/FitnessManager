@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using FitnessManager.Controllers;
 using FitnessManager.Repositories;
 using FitnessManager.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class AccountController : Controller
 {
@@ -89,7 +90,9 @@ public class AccountController : Controller
                 Apellido = model.Apellido,
                 IsActive = true,
                 FechaRegistro = DateTime.UtcNow,
-                FechaNacimiento = DateTime.UtcNow
+                FechaNacimiento = DateTime.UtcNow,
+                Objetivo = "Objetivo no definido",
+                AvatarUrl = "/avatars/Default.png"
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -119,7 +122,7 @@ public class AccountController : Controller
             Nombre = user.Nombre,
             Apellido = user.Apellido,
             PhoneNumber = user.PhoneNumber,
-            Edad = user.Edad ?? 0,
+            Edad = await _usuarioService.GetEdadAsync(user.Id),
             Peso = (float)(user.Peso ?? 0),
             Altura = (float)(user.Altura ?? 0),
             Objetivo = user.Objetivo
@@ -129,24 +132,37 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult>  Settings(string view)
     {
-        try
-        {
-            ViewData["ErrorMessage"] = null;
-            ViewData["successMessage"] = null;
-            ViewData["Title"] = "Configurariones";
-            var user = await _userManager.GetUserAsync(User);
+        try{
+            var user =  await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login", "Account");
-            ViewData["UserName"] = user.UserName;
-            ViewData["Avatar"] = user.AvatarUrl;
-            if (string.IsNullOrEmpty(view))
+            TempData["Avatar"]= user.AvatarUrl;
+            TempData["Username"]= user.UserName;
+            if(string.IsNullOrEmpty(view)|| string.IsNullOrWhiteSpace(view))
             {
-                view = "profile";
+                view = "account-settings";
             }
-            return View(model : view);
-        }catch (Exception)
+            var model = new SettingsViewModel
+            {
+                SelectedOption = view,
+                AccountSettings = new AccountSettingsViewModel()
+
+            };
+            model.AccountSettings.Nombre = user.Nombre;
+            model.AccountSettings.Apellido = user.Apellido;
+            model.AccountSettings.Username = user.UserName;
+            model.AccountSettings.Email = user.Email;
+            model.AccountSettings.Altura = (float)(user.Altura ?? 0);
+            model.AccountSettings.Peso = (float)(user.Peso ?? 0);
+            model.AccountSettings.Objetivo = user.Objetivo;
+            model.AccountSettings.FechaNacimiento = user.FechaNacimiento;
+
+            return View(model);
+        }
+        catch (Exception ex)
         {
-            TempData["ErrorMessage"] = "Ocurrió un error al cargar la página de configuraciones. Por favor, inténtelo de nuevo más tarde.";
-            return RedirectToAction("Profile", "Account");
+            TempData["ErrorMessage"] = "Ocurrió un error al cargar la configuración. Por favor, inténtelo de nuevo más tarde.";
+            Console.WriteLine("Error loading settings: " + ex.Message);
+            return View();
         }
     }
     [Authorize]
@@ -222,11 +238,79 @@ public class AccountController : Controller
         }
 
     }
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> AccountSettingsUpdate(AccountSettingsViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            ModelState.AddModelError(string.Empty, "Por favor, complete todos los campos requeridos.");
+            var settingsModel = await BuildSettingsViewModel("account-settings", new SettingsViewModel
+            {
+                AccountSettings = model
+            });
+            return View("Settings", settingsModel);
+        }
+        if(await _usuarioService.UsernameExistsAsync(model.Username, _userManager.GetUserId(User)))
+        {
+            ModelState.AddModelError(string.Empty, "El nombre de usuario ya está en uso. Por favor, elija otro.");
+            var settingsModel = await BuildSettingsViewModel("account-settings", new SettingsViewModel
+            {
+                AccountSettings = model
+            });
+            return View("Settings", settingsModel);
+        }
+        try
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            user.UserName = model.Username;
+            user.Nombre = model.Nombre;
+            user.Apellido = model.Apellido;
+            user.Email = model.Email;
+            user.Altura = model.Altura;
+            user.Peso = model.Peso;
+            user.Objetivo = model.Objetivo;
+            user.FechaNacimiento = model.FechaNacimiento;
+
+            await _userManager.UpdateAsync(user);
+
+            TempData["SuccessMessage"] = "Configuración de la cuenta actualizada exitosamente.";
+            return RedirectToAction("Settings", new { view = "account-settings" });
+
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error al actualizar la configuración. Por favor, inténtelo de nuevo.";
+            return RedirectToAction("Settings", new { view = "account-settings" });
+        }
+    }
 
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction(nameof(HomeController.Index), "Home");
+    }
+
+    private async Task<SettingsViewModel> BuildSettingsViewModel(string selectedOption, SettingsViewModel incoming = null)
+    {
+        try{
+            var model = incoming ?? new SettingsViewModel();
+
+            model.SelectedOption = selectedOption;
+
+            model.AccountSettings ??= await _usuarioService.GetAccountSettingsAsync(_userManager.GetUserId(User));
+            model.ChangePassword ??= new ChangePasswordViewModel();
+            model.DeleteAccount ??= new DeleteAccountViewModel();
+            return model;
+        }catch(Exception ex)
+        {
+            Console.WriteLine("Error building settings view model: " + ex.Message);
+            throw;
+        }
     }
 }
