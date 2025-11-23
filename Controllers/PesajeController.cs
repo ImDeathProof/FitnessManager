@@ -18,12 +18,14 @@ namespace FitnessManager.Controllers
     {
         private readonly ILogger<PesajeController> _logger;
         private readonly IPesajeService _pesajeService;
+        private readonly IUsuarioService _usuarioService;
         
 
-        public PesajeController(ILogger<PesajeController> logger, IPesajeService pesajeService)
+        public PesajeController(ILogger<PesajeController> logger, IPesajeService pesajeService, IUsuarioService usuarioService)
         {
             _logger = logger;
             _pesajeService = pesajeService;
+            _usuarioService = usuarioService;
         }
 
         [Authorize]
@@ -71,6 +73,7 @@ namespace FitnessManager.Controllers
                     Fecha = model.Fecha
                 };
                 await _pesajeService.AddPesajeAsync(pesaje); 
+                await _usuarioService.UpdatePesoAsync(userId, model.Peso);
                 TempData["SuccessMessage"] = "Pesaje creado correctamente.";           
                 return RedirectToAction("Index");
             }catch(Exception)

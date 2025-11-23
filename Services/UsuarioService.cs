@@ -286,7 +286,7 @@ namespace FitnessManager.Services
             }
         }
 
-        public async Task UpdatePesoAsync(string userId, float nuevoPeso)
+        public async Task UpdatePesoAsync(string userId, double nuevoPeso)
         {
             if (string.IsNullOrEmpty(userId))
             {

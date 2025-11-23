@@ -16,5 +16,6 @@ namespace FitnessManager.ViewModels
         public float Peso { get; set; }
         public float Altura { get; set; }
         public string Objetivo { get; set; }
+        public string AvatarUrl { get; set; }
     }
 }

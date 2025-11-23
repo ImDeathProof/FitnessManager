@@ -125,7 +125,8 @@ public class AccountController : Controller
             Edad = await _usuarioService.GetEdadAsync(user.Id),
             Peso = (float)(user.Peso ?? 0),
             Altura = (float)(user.Altura ?? 0),
-            Objetivo = user.Objetivo
+            Objetivo = user.Objetivo,
+            AvatarUrl = user.AvatarUrl
         };
         return View(model);
     }
