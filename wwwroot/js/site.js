@@ -8,3 +8,9 @@ flatpickr("#FechaNacimiento", {
     altFormat: "d/m/Y",
     locale: "es",
 });
+flatpickr("#Fecha", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d/m/Y",
+    locale: "es",
+});

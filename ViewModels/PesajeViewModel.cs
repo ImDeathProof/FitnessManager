@@ -1,18 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FitnessManager.Models
+namespace FitnessManager.ViewModels
 {
-    public class Pesaje
+    public class PesajeViewModel
     {
         public int Id { get; set; }
-        public string UsuarioId { get; set; }
-        public Usuario? Usuario { get; set; }
         [DisplayName("Peso (kg)")]
         public double Peso { get; set; }
         [DisplayName("Fecha de pesaje")]
