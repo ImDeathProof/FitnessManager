@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FitnessManager.Models;
+using FitnessManager.ViewModels;
+using Microsoft.AspNetCore.Http;
 
-namespace FitnessManager.Repositories
+
+namespace FitnessManager.Services
 {
-    public interface IRutinaRepository
+    public interface IRutinaService
     {
-        //Rutinas
+                //Rutinas
         Task<IEnumerable<Rutina>> GetRutinasByUserAsync(string usuarioId);
         Task<Rutina> GetRutinaByIdAsync(int id);
         Task<Rutina> GetRutinaByNombreAsync(string nombre, string usuarioId);
         Task UpdateRutinaAsync(Rutina rutina);
         Task DeleteRutinaAsync(Rutina rutina);
         Task AddRutinaAsync(Rutina rutina);
-        Task<bool> RutinaExistsAsync(int id);
         //Detalles
         Task<IEnumerable<DetalleRutina>> GetDetallesRutinaAsync(int rutinaId);
         Task<DetalleRutina> GetDetalleRutinaAsync(int rutinaId, int id);
@@ -23,6 +25,8 @@ namespace FitnessManager.Repositories
         Task DeleteDetalleRutinaAsync(DetalleRutina detalle);
         Task AddDetalleRutinaAsync(DetalleRutina detalle);
         Task AddDetalleRutinaAsync(List<DetalleRutina> detalles);
-        Task<bool> DetalleRutinaExistsAsync(int rutinaId, int id);
+
+        //ViewModels
+        Task<RutinaViewModel> GetRutinaViewModelAsync(int rutinaId);
     }
 }

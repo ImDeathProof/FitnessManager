@@ -14,3 +14,9 @@ flatpickr("#Fecha", {
     altFormat: "d/m/Y",
     locale: "es",
 });
+flatpickr("#FechaCreacion", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d/m/Y",
+    locale: "es",
+});

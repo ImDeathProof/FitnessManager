@@ -44,6 +44,8 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPesajeRepository, PesajeRepository>();
 builder.Services.AddScoped<IPesajeService, PesajeService>();
+builder.Services.AddScoped<IRutinaRepository, RutinaRepository>();
+builder.Services.AddScoped<IRutinaService, RutinaService>();
 
 var app = builder.Build();
 

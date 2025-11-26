@@ -21,5 +21,6 @@ namespace FitnessManager.Data
         public DbSet<Models.Dieta> Dietas { get; set; }
         public DbSet<Models.Pesaje> Pesajes { get; set; }
         public DbSet<Models.Exercise> Exercises { get; set; }
+        public DbSet<Models.DetalleRutina> DetalleRutinas { get; set; }
     }
 }

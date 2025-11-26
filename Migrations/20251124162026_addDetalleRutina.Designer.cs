@@ -4,6 +4,7 @@ using FitnessManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessManager.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251124162026_addDetalleRutina")]
+    partial class addDetalleRutina
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace FitnessManager.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ExerciseId")
+                    b.Property<int>("EjercicioId")
                         .HasColumnType("int");
 
                     b.Property<int>("Repeticiones")
@@ -44,7 +47,7 @@ namespace FitnessManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExerciseId");
+                    b.HasIndex("EjercicioId");
 
                     b.HasIndex("RutinaId");
 
@@ -101,12 +104,17 @@ namespace FitnessManager.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RutinaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("VideoUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MusculoId");
+
+                    b.HasIndex("RutinaId");
 
                     b.ToTable("Ejercicios");
                 });
@@ -217,6 +225,7 @@ namespace FitnessManager.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -475,19 +484,19 @@ namespace FitnessManager.Migrations
 
             modelBuilder.Entity("FitnessManager.Models.DetalleRutina", b =>
                 {
-                    b.HasOne("FitnessManager.Models.Exercise", "Exercise")
+                    b.HasOne("FitnessManager.Models.Ejercicio", "Ejercicio")
                         .WithMany()
-                        .HasForeignKey("ExerciseId")
+                        .HasForeignKey("EjercicioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FitnessManager.Models.Rutina", "Rutina")
-                        .WithMany("DetalleRutina")
+                        .WithMany()
                         .HasForeignKey("RutinaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Exercise");
+                    b.Navigation("Ejercicio");
 
                     b.Navigation("Rutina");
                 });
@@ -509,6 +518,10 @@ namespace FitnessManager.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FitnessManager.Models.Rutina", null)
+                        .WithMany("Ejercicio")
+                        .HasForeignKey("RutinaId");
+
                     b.Navigation("Musculo");
                 });
 
@@ -527,7 +540,9 @@ namespace FitnessManager.Migrations
                 {
                     b.HasOne("FitnessManager.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });
@@ -585,7 +600,7 @@ namespace FitnessManager.Migrations
 
             modelBuilder.Entity("FitnessManager.Models.Rutina", b =>
                 {
-                    b.Navigation("DetalleRutina");
+                    b.Navigation("Ejercicio");
                 });
 #pragma warning restore 612, 618
         }
