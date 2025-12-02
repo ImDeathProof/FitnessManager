@@ -26,9 +26,7 @@
                     <td>
                         <a class="btn btn-detail-gradient" asp-action="Details" asp-route-id="@item.Id"><i class="fa-solid fa-eye"></i></a>
                         <a class="btn btn-edit-gradient" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-edit"></i></a>
-                        <form asp-action="Delete" style="display:inline;">
-                            <button type="submit" class="btn btn-delete-gradient" asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></button>
-                        </form>
+                        <a class="btn btn-delete-gradient" asp-action="DeleteConfirmation" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
             }

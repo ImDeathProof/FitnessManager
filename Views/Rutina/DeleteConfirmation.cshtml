@@ -1,0 +1,24 @@
+@model FitnessManager.Models.Rutina
+
+<div class="row container py-5 text-white justify-content-center">
+    <div class="col-md-8">
+        <div class="container">
+            <div class="card">
+                <div class="card-header gradientT1">
+                    <h2 class="text-light">¿Estas seguro que deseas eliminar esta rutina?</h2>
+                </div>
+                <partial name="_Alert" />
+                <div class="card-body bg-dark">
+                    <p class="text-white">Nombre: @Model.Nombre</p>
+                    <p class="text-white">Descripción: @Model.Descripcion</p>
+                </div>
+                <div class="card-footer bg-dark">
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-delete-gradient" ><i class="fa-solid fa-trash me-1"></i>Eliminar</button>
+                    </form>
+                    <a class="btn btn-detail-gradient" asp-action="Index"><i class="fa-solid fa-arrow-left me-1"></i>Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

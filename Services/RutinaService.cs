@@ -6,6 +6,7 @@ using FitnessManager.Models;
 using FitnessManager.ViewModels;
 using FitnessManager.Repositories;
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnessManager.Services
 {
@@ -22,7 +23,8 @@ namespace FitnessManager.Services
                 throw new ArgumentNullException("El detalle no puede ser nulo.");
             try
             {
-                await _rutinaRepository.AddDetalleRutinaAsync(detalle);
+                _rutinaRepository.AddDetalleRutina(detalle);
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -40,7 +42,8 @@ namespace FitnessManager.Services
                 throw new ArgumentNullException("La lista de detalles no puede ser nula o vacía.");
             try
             {
-                await _rutinaRepository.AddDetalleRutinaAsync(detalles);
+                _rutinaRepository.AddDetalleRutina(detalles);
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -58,7 +61,8 @@ namespace FitnessManager.Services
                 throw new ArgumentNullException("La rutina no puede ser nula.");
             try
             {
-                await _rutinaRepository.AddRutinaAsync(rutina);
+                _rutinaRepository.AddRutina(rutina);
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -70,13 +74,33 @@ namespace FitnessManager.Services
             }
         }
 
+        public async Task DeleteAllDetalleRutinaAsync(int rutinaId)
+        {
+            if(rutinaId <= 0)
+                throw new ArgumentException("El ID de la rutina debe ser mayor a cero.");
+            try
+            {
+                _rutinaRepository.DeleteAllDetalleRutina(rutinaId);
+                await _rutinaRepository.SaveChangesAsync();
+            }
+            catch(DbException dbex)
+            {
+                throw new RutinasServiceException("Ocurrio un error en la base de datos.", dbex);
+            }
+            catch(Exception ex)
+            {
+                throw new RutinasServiceException("Error al eliminar DetallesRutina", ex);
+            }
+        }
+
         public async Task DeleteDetalleRutinaAsync(DetalleRutina detalle)
         {
             if(detalle == null)
                 throw new ArgumentNullException("El detalle no puede ser nulo.");
             try
             {
-                await _rutinaRepository.DeleteDetalleRutinaAsync(detalle);
+                _rutinaRepository.DeleteDetalleRutina(detalle);
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -94,7 +118,8 @@ namespace FitnessManager.Services
                 throw new ArgumentNullException("La rutina no puede ser nula.");
             try
             {
-                await _rutinaRepository.DeleteRutinaAsync(rutina);
+                _rutinaRepository.DeleteRutina(rutina);
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -242,7 +267,17 @@ namespace FitnessManager.Services
                 throw new ArgumentNullException("El detalle no puede ser nulo.");
             try
             {
-                await _rutinaRepository.UpdateDetalleRutinaAsync(detalle);
+                //1. Obtener el Detalle existente
+                var existente = await _rutinaRepository.GetDetalleRutinaAsync(detalle.RutinaId, detalle.Id);
+                if(existente == null)
+                    throw new RutinasServiceException("El Detalle no existe.");
+                //2. Actualizar los campos especificados
+                existente.ExerciseId = detalle.ExerciseId;
+                existente.Series = detalle.Series;
+                existente.Repeticiones = detalle.Repeticiones;
+                _rutinaRepository.UpdateDetalleRutina(existente);
+                //3. Guardar los cambios
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -254,13 +289,71 @@ namespace FitnessManager.Services
             }
         }
 
+        public async Task UpdateDetalleRutinaAsync(List<DetalleRutina> detalles)
+        {
+            if(detalles == null || detalles.Count == 0)
+                throw new ArgumentNullException("La lista de detalles no puede ser nula o vacía.");
+            try
+            {
+                int rutinaId = detalles.First().RutinaId;
+                var detallesExistentes = await _rutinaRepository.GetDetallesRutinaAsync(rutinaId)
+                                        ?? new List<DetalleRutina>();
+                // 1. Actualizar o eliminar existentes
+                foreach (var existente in detallesExistentes)
+                {
+                    var entrante = detalles.FirstOrDefault(d => d.Id == existente.Id);
+                    if (entrante != null)
+                    {
+                        // actualizar
+                        existente.ExerciseId = entrante.ExerciseId;
+                        existente.Series = entrante.Series;
+                        existente.Repeticiones = entrante.Repeticiones;
+                        _rutinaRepository.UpdateDetalleRutina(existente);
+                    }
+                    else
+                    {
+                        // eliminar
+                        _rutinaRepository.DeleteDetalleRutina(existente);
+                    }
+                }
+                // 2. Agregar nuevos (los que no tienen Id o no están en la lista existente)
+                foreach (var entrante in detalles)
+                {
+                    var yaExiste = detallesExistentes.Any(e => e.Id == entrante.Id);
+                    if (!yaExiste)
+                    {
+                        _rutinaRepository.AddDetalleRutina(entrante);
+                    } 
+                }
+                await _rutinaRepository.SaveChangesAsync();
+            }
+            catch(DbException dbex)
+            {
+                throw new RutinasServiceException("Ocurrio un error en la base de datos.", dbex);
+            }
+            catch(DbUpdateException dbuex)
+            {
+                throw new RutinasServiceException("Error de actualización en la base de datos.", dbuex);
+            }
+            catch(Exception ex)
+            {
+                throw new RutinasServiceException("Error al actualizar", ex);
+            }
+        }
+
         public async Task UpdateRutinaAsync(Rutina rutina)
         {
             if(rutina == null)
                 throw new ArgumentNullException("La rutina no puede ser nula.");
             try
             {
-                await _rutinaRepository.UpdateRutinaAsync(rutina);
+                var rutinaExistente = await _rutinaRepository.GetRutinaByIdAsync(rutina.Id);
+                if(rutinaExistente == null)
+                    throw new RutinasServiceException("La Rutina no existe.");
+                rutinaExistente.Nombre = rutina.Nombre;
+                rutinaExistente.Descripcion = rutina.Descripcion;
+                _rutinaRepository.UpdateRutina(rutinaExistente);
+                await _rutinaRepository.SaveChangesAsync();
             }
             catch(DbException dbex)
             {
@@ -281,3 +374,4 @@ public class RutinasServiceException : Exception
 
     public RutinasServiceException(string message, Exception inner) : base(message, inner) { }
 }
+

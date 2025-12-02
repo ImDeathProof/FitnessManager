@@ -1,0 +1,143 @@
+@model FitnessManager.ViewModels.RutinaViewModel
+
+<div class="row py-5 text-white justify-content-center">
+    <div class="col-md-8">
+        <div class="container">
+            <form asp-action="Edit" method="post">
+                <div class="card bg-dark text-white">
+                    <div class="card-header gradientT1">
+                        <h3>Editar Rutina</h3>
+                    </div>
+                    <div class="card-body bg-dark text-white">
+
+                        <partial name="_Alert" />
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <input type="hidden" asp-for="Rutina.Id" />
+                        <!-- Datos generales de la rutina -->
+                        <div class="form-group mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input asp-for="Rutina.Nombre" class="form-control" required/>
+                            <span asp-validation-for="Rutina.Nombre" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Descripción</label>
+                            <textarea asp-for="Rutina.Descripcion" class="form-control" style="resize: none;"rows="4" required></textarea>
+                            <span asp-validation-for="Rutina.Descripcion" class="text-danger"></span>
+                        </div>
+                        <hr>
+                        <h4>Detalles</h4>
+
+                        <table class="table table-dark table-striped table-responsive bg-dark border border-dark-subtle rounded-3 p-3 mt-2" id="detallesTable">
+                            <button type="button" class="btn btn-success mb-2 mt-2" onclick="addRow()"><i class="fa-solid fa-plus"></i> Agregar Ejercicio</button>
+                            <thead>
+                                <tr>
+                                    <th>Ejercicio</th>
+                                    <th>Series</th>
+                                    <th>Repeticiones</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Detalles.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <select asp-for="Detalles[@i].ExerciseId"
+                                                    class="form-control"
+                                                    asp-items="ViewBag.Ejercicios"></select>
+                                        </td>
+                                        <td>
+                                            <input type="number" asp-for="Detalles[@i].Series" class="form-control" required/>
+                                        </td>
+                                        <td>
+                                            <input type="number" asp-for="Detalles[@i].Repeticiones" class="form-control" required/>
+                                        </td>
+
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-danger"
+                                                    onclick="removeRow(this)">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-dark">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+// ------------------------------
+// AGREGAR FILA
+// ------------------------------
+function addRow() {
+    const table = document.getElementById("detallesTable").querySelector("tbody");
+    const rows = table.querySelectorAll("tr").length;
+    const newIndex = rows;
+
+    const newRow = `
+        <tr>
+            <td>
+                <select name="Detalles[${newIndex}].ExerciseId"
+                        class="form-control">
+                    ${document.getElementById("EjercicioOptions").innerHTML}
+                </select>
+            </td>
+
+            <td><input type="number" name="Detalles[${newIndex}].Series" class="form-control" required/></td>
+            <td><input type="number" name="Detalles[${newIndex}].Repeticiones" class="form-control" required/></td>
+
+            <td>
+                <button type="button" class="btn btn-danger" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>
+    `;
+
+    table.insertAdjacentHTML("beforeend", newRow);
+    reindexRows();
+}
+
+// ------------------------------
+// ELIMINAR FILA
+// ------------------------------
+function removeRow(btn) {
+    btn.closest("tr").remove();
+    reindexRows();
+}
+
+// ------------------------------
+// REINDEXAR TODAS LAS FILAS
+// ------------------------------
+function reindexRows() {
+    const rows = document.querySelectorAll("#detallesTable tbody tr");
+
+    rows.forEach((row, index) => {
+
+        row.querySelectorAll("input, select").forEach(input => {
+
+            const original = input.name;
+            const newName = original.replace(/Detalles\[\d+\]/, `Detalles[${index}]`);
+            input.name = newName;
+
+        });
+
+    });
+}
+</script>
+
+<!-- OPCIONES DEL SELECT (se clonan en JS) -->
+<select id="EjercicioOptions" style="display:none;">
+    @foreach (var item in (ViewBag.Ejercicios as IEnumerable<SelectListItem>) ?? new List<SelectListItem>())
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+</select>

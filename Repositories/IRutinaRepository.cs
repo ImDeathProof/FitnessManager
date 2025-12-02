@@ -12,17 +12,23 @@ namespace FitnessManager.Repositories
         Task<IEnumerable<Rutina>> GetRutinasByUserAsync(string usuarioId);
         Task<Rutina> GetRutinaByIdAsync(int id);
         Task<Rutina> GetRutinaByNombreAsync(string nombre, string usuarioId);
-        Task UpdateRutinaAsync(Rutina rutina);
-        Task DeleteRutinaAsync(Rutina rutina);
-        Task AddRutinaAsync(Rutina rutina);
+        void UpdateRutina(Rutina rutina);
+        void DeleteRutina(Rutina rutina);
+        void AddRutina(Rutina rutina);
         Task<bool> RutinaExistsAsync(int id);
+
+
         //Detalles
         Task<IEnumerable<DetalleRutina>> GetDetallesRutinaAsync(int rutinaId);
         Task<DetalleRutina> GetDetalleRutinaAsync(int rutinaId, int id);
-        Task UpdateDetalleRutinaAsync(DetalleRutina detalle);
-        Task DeleteDetalleRutinaAsync(DetalleRutina detalle);
-        Task AddDetalleRutinaAsync(DetalleRutina detalle);
-        Task AddDetalleRutinaAsync(List<DetalleRutina> detalles);
+        void UpdateDetalleRutina(DetalleRutina detalle);
+        void UpdateDetalleRutina(List<DetalleRutina> detalles);
+        void DeleteDetalleRutina(DetalleRutina detalle);
+        void DeleteAllDetalleRutina(int rutinaId);
+        void AddDetalleRutina(DetalleRutina detalle);
+        void AddDetalleRutina(List<DetalleRutina> detalles);
         Task<bool> DetalleRutinaExistsAsync(int rutinaId, int id);
+
+        Task SaveChangesAsync();
     }
 }

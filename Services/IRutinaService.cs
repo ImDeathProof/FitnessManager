@@ -22,10 +22,11 @@ namespace FitnessManager.Services
         Task<IEnumerable<DetalleRutina>> GetDetallesRutinaAsync(int rutinaId);
         Task<DetalleRutina> GetDetalleRutinaAsync(int rutinaId, int id);
         Task UpdateDetalleRutinaAsync(DetalleRutina detalle);
+        Task UpdateDetalleRutinaAsync(List<DetalleRutina> detalles);
         Task DeleteDetalleRutinaAsync(DetalleRutina detalle);
         Task AddDetalleRutinaAsync(DetalleRutina detalle);
         Task AddDetalleRutinaAsync(List<DetalleRutina> detalles);
-
+        Task DeleteAllDetalleRutinaAsync(int rutinaId);
         //ViewModels
         Task<RutinaViewModel> GetRutinaViewModelAsync(int rutinaId);
     }

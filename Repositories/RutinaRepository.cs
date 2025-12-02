@@ -16,33 +16,35 @@ namespace FitnessManager.Repositories
         {
             _context = context;
         }
-        public async Task AddDetalleRutinaAsync(DetalleRutina detalle)
+        public void AddDetalleRutina(DetalleRutina detalle)
         {
             _context.DetalleRutinas.Add(detalle);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task AddDetalleRutinaAsync(List<DetalleRutina> detalles)
+        public void AddDetalleRutina(List<DetalleRutina> detalles)
         {
             _context.DetalleRutinas.AddRange(detalles);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task AddRutinaAsync(Rutina rutina)
+        public void AddRutina(Rutina rutina)
         {
             _context.Rutinas.Add(rutina);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteDetalleRutinaAsync(DetalleRutina detalle)
+        public void DeleteAllDetalleRutina(int rutinaId)
+        {
+            var detalles = _context.DetalleRutinas.Where(d => d.RutinaId == rutinaId);
+            _context.DetalleRutinas.RemoveRange(detalles);
+        }
+
+        public void DeleteDetalleRutina(DetalleRutina detalle)
         {
             _context.DetalleRutinas.Remove(detalle);
         }
 
-        public async Task DeleteRutinaAsync(Rutina rutina)
+        public void DeleteRutina(Rutina rutina)
         {
             _context.Rutinas.Remove(rutina);
-            await _context.SaveChangesAsync();
         }
 
         public  async Task<bool> DetalleRutinaExistsAsync(int rutinaId, int id)
@@ -59,6 +61,7 @@ namespace FitnessManager.Repositories
         {
             return await _context.DetalleRutinas
                 .Where(d => d.RutinaId == rutinaId)
+                .Include(d => d.Exercise)
                 .ToListAsync();
         }
 
@@ -85,15 +88,24 @@ namespace FitnessManager.Repositories
             return await _context.Rutinas.AnyAsync(r => r.Id == id);
         }
 
-        public async Task UpdateDetalleRutinaAsync(DetalleRutina detalle)
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public  void UpdateDetalleRutina(DetalleRutina detalle)
         {
             _context.DetalleRutinas.Update(detalle);
         }
 
-        public async Task UpdateRutinaAsync(Rutina rutina)
+        public void UpdateDetalleRutina(List<DetalleRutina> detalles)
+        {
+            _context.DetalleRutinas.UpdateRange(detalles);
+        }
+
+        public void UpdateRutina(Rutina rutina)
         {
             _context.Rutinas.Update(rutina);
-            await _context.SaveChangesAsync();
         }
     }
 }
