@@ -113,6 +113,19 @@ main{
     transform: scale(1.05);
     box-shadow: 0 0.75rem 1.5rem rgba(51, 212, 247, 0.3);
 }
+.btn-back-gradient{
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    background: linear-gradient(135deg, #888888, #444444);
+}
+.btn-back-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.75rem 1.5rem rgba(136, 136, 136, 0.3);
+}
 .gradientT1{
   background-image: linear-gradient(135deg, #097179, #023197);
 }

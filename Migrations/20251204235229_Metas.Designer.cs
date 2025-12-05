@@ -4,6 +4,7 @@ using FitnessManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessManager.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251204235229_Metas")]
+    partial class Metas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,17 +175,24 @@ namespace FitnessManager.Migrations
                     b.Property<DateTime>("FechaLimite")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MetaType")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
-
                     b.Property<int>("TipoMetaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsuarioId")
+                    b.Property<string>("UserId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("ValorAtual")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal?>("ValorInicial")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal>("ValorMeta")
+                        .HasColumnType("decimal(5,2)");
 
                     b.HasKey("Id");
 
@@ -191,10 +201,6 @@ namespace FitnessManager.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Metas");
-
-                    b.HasDiscriminator<string>("MetaType").HasValue("Meta");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("FitnessManager.Models.Musculo", b =>
@@ -532,22 +538,6 @@ namespace FitnessManager.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FitnessManager.Models.MetaPeso", b =>
-                {
-                    b.HasBaseType("FitnessManager.Models.Meta");
-
-                    b.Property<decimal>("ValorActual")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<decimal>("ValorInicial")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<decimal>("ValorMeta")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.HasDiscriminator().HasValue("MetaPeso");
-                });
-
             modelBuilder.Entity("FitnessManager.Models.DetalleRutina", b =>
                 {
                     b.HasOne("FitnessManager.Models.Exercise", "Exercise")
@@ -597,9 +587,7 @@ namespace FitnessManager.Migrations
 
                     b.HasOne("FitnessManager.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioId");
 
                     b.Navigation("TipoMeta");
 

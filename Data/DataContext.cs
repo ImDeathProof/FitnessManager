@@ -22,5 +22,31 @@ namespace FitnessManager.Data
         public DbSet<Models.Pesaje> Pesajes { get; set; }
         public DbSet<Models.Exercise> Exercises { get; set; }
         public DbSet<Models.DetalleRutina> DetalleRutinas { get; set; }
+        public DbSet<Models.Meta> Metas { get; set; }
+        public DbSet<Models.TipoMeta> TipoMetas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // 🔥 Configuración de herencia TPH
+            modelBuilder.Entity<Meta>()
+                .HasDiscriminator<string>("MetaType")
+                .HasValue<MetaPeso>("MetaPeso");
+
+            // Opcional: especificar Decimal precision
+            modelBuilder.Entity<MetaPeso>()
+                .Property(m => m.ValorMeta)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<MetaPeso>()
+                .Property(m => m.ValorInicial)
+                .HasColumnType("decimal(5,2)");
+
+            modelBuilder.Entity<MetaPeso>()
+                .Property(m => m.ValorActual)
+                .HasColumnType("decimal(5,2)");
+        }
     }
+    
 }

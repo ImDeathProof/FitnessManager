@@ -4,6 +4,7 @@ using FitnessManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessManager.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251205000611_ModificoMetas2")]
+    partial class ModificoMetas2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,11 +175,6 @@ namespace FitnessManager.Migrations
                     b.Property<DateTime>("FechaLimite")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MetaType")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
-
                     b.Property<int>("TipoMetaId")
                         .HasColumnType("int");
 
@@ -191,10 +189,6 @@ namespace FitnessManager.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Metas");
-
-                    b.HasDiscriminator<string>("MetaType").HasValue("Meta");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("FitnessManager.Models.Musculo", b =>
@@ -530,22 +524,6 @@ namespace FitnessManager.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("FitnessManager.Models.MetaPeso", b =>
-                {
-                    b.HasBaseType("FitnessManager.Models.Meta");
-
-                    b.Property<decimal>("ValorActual")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<decimal>("ValorInicial")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<decimal>("ValorMeta")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.HasDiscriminator().HasValue("MetaPeso");
                 });
 
             modelBuilder.Entity("FitnessManager.Models.DetalleRutina", b =>
